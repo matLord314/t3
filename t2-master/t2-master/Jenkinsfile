@@ -1,0 +1,58 @@
+pipeline {
+    agent any
+
+    environment {
+        GIT_CREDENTIALS_ID = '1' // Reemplaza con el ID de las credenciales que creaste en Jenkins
+    }
+
+    stages {
+        stage('Clonar Repositorio') {
+            steps {
+                // Clonar el repositorio de GitHub donde tienes tus archivos de configuración
+                git url: 'https://github.com/matLord314/t2.git', credentialsId: env.GIT_CREDENTIALS_ID
+            }
+        }
+        
+        stage('Construir Imágenes Docker') {
+            parallel {
+                stage('Construir Imagen w1') {
+                    steps {
+                        script {
+                            // Construir la imagen Docker para w1
+                            docker.build('w1_image_jenkin', './w1')
+                        }
+                    }
+                }
+                stage('Construir Imagen w2') {
+                    steps {
+                        script {
+                            // Construir la imagen Docker para w2
+                            docker.build('w2_image_jenkin', './w2')
+                        }
+                    }
+                }
+                stage('Construir Imagen Reverse Proxy') {
+                    steps {
+                        script {
+                            // Construir la imagen Docker para el reverse proxy
+                            docker.build('rp_image_jenkin', './rprr')
+                        }
+                    }
+                }
+            }
+        }
+        
+        stage('Desplegar Contenedores Docker') {
+            steps {
+                script {
+                    // Ejecutar nuevos contenedores
+                    sh '''
+                    docker run -d --name w1_container_jenkin w1_image_jenkin
+                    docker run -d --name w2_container_jenkin w2_image_jenkin
+                    docker run -d --name rprr_container_jenkin -p 8087:80 --link w1_container_jenkin --link w2_container_jenkin rp_image_jenkin
+                    '''
+                }
+            }
+        }
+    }
+}
