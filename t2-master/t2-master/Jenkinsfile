@@ -4,7 +4,7 @@ pipeline {
     environment {
         GIT_CREDENTIALS_ID = '1' // Reemplaza con el ID de las credenciales que creaste en Jenkins
         registryCredential = 'dockerhub-credentials-id' // Reemplaza con el ID de las credenciales de DockerHub
-        KUBECONFIG = credentials('2') // Reemplaza con el ID de las credenciales del kubeconfig en Jenkins
+        //KUBECONFIG = credentials('2') // Reemplaza con el ID de las credenciales del kubeconfig en Jenkins
     }
 
     stages {
