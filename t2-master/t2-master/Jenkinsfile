@@ -47,15 +47,17 @@ pipeline {
         stage('Subir Imágenes Docker') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', env.DOCKERHUB_CREDENTIALS) {
-                        sh "docker login -u ${env.DOCKERHUB_CREDENTIALS_USR} -p ${env.DOCKERHUB_CREDENTIALS_PSW}"
-                        sh "docker tag w1_image_jenkin_kub:latest matlord/w1_image_jenkin_kub:latest"
-                        sh "docker tag w2_image_jenkin_kub:latest matlord/w2_image_jenkin_kub:latest"
-                        sh "docker tag rp_image_jenkin_kub:latest matlord/rp_image_jenkin_kub:latest"
+                    withCredentials([usernamePassword(credentialsId: env.DOCKERHUB_CREDENTIALS, passwordVariable: 'DOCKERHUB_PWD', usernameVariable: 'DOCKERHUB_USER')]) {
+                        docker.withRegistry('https://index.docker.io/v1/', env.DOCKERHUB_CREDENTIALS) {
+                            sh "docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PWD}"
+                            sh "docker tag w1_image_jenkin_kub:latest matlord/w1_image_jenkin_kub:latest"
+                            sh "docker tag w2_image_jenkin_kub:latest matlord/w2_image_jenkin_kub:latest"
+                            sh "docker tag rp_image_jenkin_kub:latest matlord/rp_image_jenkin_kub:latest"
 
-                        sh "docker push matlord/w1_image_jenkin_kub:latest"
-                        sh "docker push matlord/w2_image_jenkin_kub:latest"
-                        sh "docker push matlord/rp_image_jenkin_kub:latest"
+                            sh "docker push matlord/w1_image_jenkin_kub:latest"
+                            sh "docker push matlord/w2_image_jenkin_kub:latest"
+                            sh "docker push matlord/rp_image_jenkin_kub:latest"
+                        }
                     }
                 }
             }
