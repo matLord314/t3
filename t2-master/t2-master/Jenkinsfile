@@ -49,13 +49,13 @@ pipeline {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', env.DOCKERHUB_CREDENTIALS) {
                         sh "docker login -u ${env.DOCKERHUB_CREDENTIALS_USR} -p ${env.DOCKERHUB_CREDENTIALS_PSW}"
-                        sh "docker tag w1_image_jenkin:latest matlord/w1_image_jenkin:latest"
-                        sh "docker tag w2_image_jenkin:latest matlord/w2_image_jenkin:latest"
-                        sh "docker tag rp_image_jenkin:latest matlord/rp_image_jenkin:latest"
+                        sh "docker tag w1_image_jenkin_kub:latest matlord/w1_image_jenkin_kub:latest"
+                        sh "docker tag w2_image_jenkin_kub:latest matlord/w2_image_jenkin_kub:latest"
+                        sh "docker tag rp_image_jenkin_kub:latest matlord/rp_image_jenkin_kub:latest"
 
-                        sh "docker push matlord/w1_image_jenkin:latest"
-                        sh "docker push matlord/w2_image_jenkin:latest"
-                        sh "docker push matlord/rp_image_jenkin:latest"
+                        sh "docker push matlord/w1_image_jenkin_kub:latest"
+                        sh "docker push matlord/w2_image_jenkin_kub:latest"
+                        sh "docker push matlord/rp_image_jenkin_kub:latest"
                     }
                 }
             }
@@ -67,9 +67,9 @@ pipeline {
                     def yamlPath = '/home/matias.diaz/jenkins/manifiestos' // Ruta en la máquina del clúster donde están los archivos YAML
 
                     // Actualizar las imágenes en los archivos YAML
-                    sh "sed -i 's|image: .*w1_image_jenkin:.*|image: matlord/w1_image_jenkin:latest|' ${yamlPath}/w1-deployment.yaml"
-                    sh "sed -i 's|image: .*w2_image_jenkin:.*|image: matlord/w2_image_jenkin:latest|' ${yamlPath}/w2-deployment.yaml"
-                    sh "sed -i 's|image: .*rp_image_jenkin:.*|image: matlord/rp_image_jenkin:latest|' ${yamlPath}/rprr-deployment.yaml"
+                    sh "sed -i 's|image: .*w1_image_jenkin:.*|image: matlord/w1_image_jenkin_kub:latest|' ${yamlPath}/w1-deployment.yaml"
+                    sh "sed -i 's|image: .*w2_image_jenkin:.*|image: matlord/w2_image_jenkin_kub:latest|' ${yamlPath}/w2-deployment.yaml"
+                    sh "sed -i 's|image: .*rp_image_jenkin:.*|image: matlord/rp_image_jenkin_kub:latest|' ${yamlPath}/rprr-deployment.yaml"
 
                     // Aplicar los archivos YAML en el clúster de Kubernetes
                     sh "kubectl apply -f ${yamlPath}/w1-deployment.yaml"
