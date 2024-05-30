@@ -3,6 +3,8 @@ pipeline {
 
     environment {
         GIT_CREDENTIALS_ID = '1' // Reemplaza con el ID de las credenciales que creaste en Jenkins
+        DOCKERHUB_CREDENTIALS = credentials('3') // Reemplaza con el ID de las credenciales de DockerHub
+        KUBECONFIG = credentials('2') // Reemplaza con el ID de las credenciales del kubeconfig en Jenkins
     }
 
     stages {
@@ -12,7 +14,7 @@ pipeline {
                 git url: 'https://github.com/matLord314/t2.git', credentialsId: env.GIT_CREDENTIALS_ID
             }
         }
-        
+
         stage('Construir Imágenes Docker') {
             parallel {
                 stage('Construir Imagen w1') {
@@ -41,18 +43,48 @@ pipeline {
                 }
             }
         }
-        
-        stage('Desplegar Contenedores Docker') {
+
+        stage('Subir Imágenes Docker') {
             steps {
                 script {
-                    // Ejecutar nuevos contenedores
-                    sh '''
-                    docker run -d --name w1_container_jenkin w1_image_jenkin
-                    docker run -d --name w2_container_jenkin w2_image_jenkin
-                    docker run -d --name rprr_container_jenkin -p 8087:80 --link w1_container_jenkin --link w2_container_jenkin rp_image_jenkin
-                    '''
+                    docker.withRegistry('https://index.docker.io/v1/', env.DOCKERHUB_CREDENTIALS) {
+                        sh "docker tag w1_image_jenkin:latest matlord/w1_image_jenkin:latest"
+                        sh "docker tag w2_image_jenkin:latest matlord/w2_image_jenkin:latest"
+                        sh "docker tag rp_image_jenkin:latest matlord/rp_image_jenkin:latest"
+
+                        sh "docker push matlord/w1_image_jenkin:latest"
+                        sh "docker push matlord/w2_image_jenkin:latest"
+                        sh "docker push matlord/rp_image_jenkin:latest"
+                    }
                 }
             }
+        }
+
+        stage('Actualizar y Desplegar en Kubernetes') {
+            steps {
+                script {
+                    def yamlPath = '/home/matias.diaz/jenkins/manifiestos' // Ruta en la máquina del clúster donde están los archivos YAML
+
+                    // Actualizar las imágenes en los archivos YAML
+                    sh "sed -i 's|image: .*w1_image_jenkin:.*|image: matlord/w1_image_jenkin:latest|' ${yamlPath}/w1-deployment.yaml"
+                    sh "sed -i 's|image: .*w2_image_jenkin:.*|image: matlord/w2_image_jenkin:latest|' ${yamlPath}/w2-deployment.yaml"
+                    sh "sed -i 's|image: .*rp_image_jenkin:.*|image: matlord/rp_image_jenkin:latest|' ${yamlPath}/rprr-deployment.yaml"
+
+                    // Aplicar los archivos YAML en el clúster de Kubernetes
+                    sh "kubectl apply -f ${yamlPath}/w1-deployment.yaml"
+                    sh "kubectl apply -f ${yamlPath}/w2-deployment.yaml"
+                    sh "kubectl apply -f ${yamlPath}/rprr-deployment.yaml"
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment successful!'
+        }
+        failure {
+            echo 'Deployment failed!'
         }
     }
 }
