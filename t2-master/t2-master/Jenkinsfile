@@ -52,13 +52,13 @@ pipeline {
                             sh "docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PWD}"
                         
                         // Static tagging and pushing of images
-                        sh "docker tag w1_image_jenkin_kub:latest matlord/w1_image_jenkin_kub:stable"
-                        sh "docker tag w2_image_jenkin_kub:latest matlord/w2_image_jenkin_kub:stable"
-                        sh "docker tag rp_image_jenkin_kub:latest matlord/rp_image_jenkin_kub:stable"
+                        sh "docker tag w1_image_jenkin_kub:latest matlord/w1_image_jenkin_kub:stable1"
+                        sh "docker tag w2_image_jenkin_kub:latest matlord/w2_image_jenkin_kub:stable1"
+                        sh "docker tag rp_image_jenkin_kub:latest matlord/rp_image_jenkin_kub:stable1"
 
-                        sh "docker push matlord/w1_image_jenkin_kub:stable"
-                        sh "docker push matlord/w2_image_jenkin_kub:stable"
-                        sh "docker push matlord/rp_image_jenkin_kub:stable"
+                        sh "docker push matlord/w1_image_jenkin_kub:stable1"
+                        sh "docker push matlord/w2_image_jenkin_kub:stable1"
+                        sh "docker push matlord/rp_image_jenkin_kub:stable1"
                         }
                     }
                 }
