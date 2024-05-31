@@ -69,7 +69,7 @@ pipeline {
             steps {
                 script {
                     // Copiar los archivos YAML desde el contenedor en el clúster a la máquina de Jenkins
-                    sh "kubectl cp /home/matias.diaz/jenkins/manifiestos/datacopy/* jenkins-deployment-64c565887c-pwst6:/tmp/manifiestos"
+                    sh "kubectl cp /home/matias.diaz/jenkins/manifiestos/datacopy jenkins-deployment-64c565887c-pwst6:/tmp/manifiestos"
                 }
             }
         }
