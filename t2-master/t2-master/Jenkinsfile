@@ -70,6 +70,9 @@ pipeline {
                 script {
                     def yamlPath = '/tmp/config-copy' // Ruta en la máquina del clúster donde están los archivos YAML
 
+                    // Verificar que los archivos existen
+                    sh "ls -l ${yamlPath}"
+
                     // Actualizar las imágenes en los archivos YAML
                     sh "sed -i 's|image: .*w1_image_jenkin:.*|image: matlord/w1_image_jenkin_kub:latest|' ${yamlPath}/w1-deployment.yaml"
                     sh "sed -i 's|image: .*w2_image_jenkin:.*|image: matlord/w2_image_jenkin_kub:latest|' ${yamlPath}/w2-deployment.yaml"
