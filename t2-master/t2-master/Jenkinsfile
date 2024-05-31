@@ -21,7 +21,7 @@ pipeline {
                     steps {
                         script {
                             // Construir la imagen Docker para w1
-                            docker.build('w1_image_jenkin_kub', './w1')
+                            docker.build('w1_image_jenkin_kub', './t2-master/t2-master/w1')
                         }
                     }
                 }
@@ -29,7 +29,7 @@ pipeline {
                     steps {
                         script {
                             // Construir la imagen Docker para w2
-                            docker.build('w2_image_jenkin_kub', './w2')
+                            docker.build('w2_image_jenkin_kub', './t2-master/w2')
                         }
                     }
                 }
