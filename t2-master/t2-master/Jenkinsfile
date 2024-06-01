@@ -74,7 +74,7 @@ pipeline {
                     // Restaurar placeholders en los archivos YAML antes de actualizar
                     sh "sed -i 's|image: matlord/w1_image_jenkin_kub:.*|image: matlord/w1_image_jenkin_kub:__IMAGE_TAG__|' ${yamlPath}/w1deploy.yaml"
                     sh "sed -i 's|image: matlord/w2_image_jenkin_kub:.*|image: matlord/w2_image_jenkin_kub:__IMAGE_TAG__|' ${yamlPath}/w2deploy.yaml"
-                    sh "sed -i 's|image: matlord/rp_image_jenkin_kub:.*|image: matlord/rp_image_jenkin_kub:__IMAGE_TAG__|' ${yamlPath}/w3deploy.yaml"
+                    sh "sed -i 's|image: matlord/rp_image_jenkin_kub:.*|image: matlord/rp_image_jenkin_kub:__IMAGE_TAG__|' ${yamlPath}/rpdeploy.yaml"
 
                     // Verificar que los archivos contienen el placeholder correcto
                     sh "grep __IMAGE_TAG__ ${yamlPath}/*.yaml"
