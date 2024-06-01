@@ -76,8 +76,7 @@ pipeline {
                     sh "sed -i 's|matlord/w2_image_jenkin_kub:.*|matlord/w2_image_jenkin_kub:__IMAGE_TAG__|' ${yamlPath}/w2-deployment.yaml"
                     sh "sed -i 's|matlord/rp_image_jenkin_kub:.*|matlord/rp_image_jenkin_kub:__IMAGE_TAG__|' ${yamlPath}/rprr-deployment.yaml"
 
-                    // Verificar que los archivos existen y contienen el placeholder correcto
-                    sh "ls -l ${yamlPath}"
+                    // Verificar que los archivos contienen el placeholder correcto
                     sh "grep __IMAGE_TAG__ ${yamlPath}/*.yaml"
 
                     // Actualizar el placeholder en los archivos YAML
