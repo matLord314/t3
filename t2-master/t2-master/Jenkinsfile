@@ -72,9 +72,9 @@ pipeline {
                     def tag = "stable-${env.BUILD_ID}" // Usar el mismo tag que se utilizó para empujar las imágenes
 
                     // Restaurar placeholders en los archivos YAML antes de actualizar
-                    sh "sed -i 's|matlord/w1_image_jenkin_kub:.*|matlord/w1_image_jenkin_kub:__IMAGE_TAG__|' ${yamlPath}/w1-deployment.yaml"
-                    sh "sed -i 's|matlord/w2_image_jenkin_kub:.*|matlord/w2_image_jenkin_kub:__IMAGE_TAG__|' ${yamlPath}/w2-deployment.yaml"
-                    sh "sed -i 's|matlord/rp_image_jenkin_kub:.*|matlord/rp_image_jenkin_kub:__IMAGE_TAG__|' ${yamlPath}/rprr-deployment.yaml"
+                    sh "sed -i 's|image: matlord/w1_image_jenkin_kub:.*|image: matlord/w1_image_jenkin_kub:__IMAGE_TAG__|' ${yamlPath}/w1-deployment.yaml"
+                    sh "sed -i 's|image: matlord/w2_image_jenkin_kub:.*|image: matlord/w2_image_jenkin_kub:__IMAGE_TAG__|' ${yamlPath}/w2-deployment.yaml"
+                    sh "sed -i 's|image: matlord/rp_image_jenkin_kub:.*|image: matlord/rp_image_jenkin_kub:__IMAGE_TAG__|' ${yamlPath}/rprr-deployment.yaml"
 
                     // Verificar que los archivos contienen el placeholder correcto
                     sh "grep __IMAGE_TAG__ ${yamlPath}/*.yaml"
