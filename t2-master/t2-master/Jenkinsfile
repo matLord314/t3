@@ -72,27 +72,27 @@ pipeline {
                     def tag = "stable-${env.BUILD_ID}" // Usar el mismo tag que se utilizó para empujar las imágenes
 
                     // Restaurar placeholders en los archivos YAML antes de actualizar
-                    sh "sed -i 's|image: matlord/w1_image_jenkin_kub:.*|image: matlord/w1_image_jenkin_kub:__IMAGE_TAG__|' ${yamlPath}/w1-deployment.yaml"
-                    sh "sed -i 's|image: matlord/w2_image_jenkin_kub:.*|image: matlord/w2_image_jenkin_kub:__IMAGE_TAG__|' ${yamlPath}/w2-deployment.yaml"
-                    sh "sed -i 's|image: matlord/rp_image_jenkin_kub:.*|image: matlord/rp_image_jenkin_kub:__IMAGE_TAG__|' ${yamlPath}/rprr-deployment.yaml"
+                    sh "sed -i 's|image: matlord/w1_image_jenkin_kub:.*|image: matlord/w1_image_jenkin_kub:__IMAGE_TAG__|' ${yamlPath}/single.yaml"
+                    sh "sed -i 's|image: matlord/w2_image_jenkin_kub:.*|image: matlord/w2_image_jenkin_kub:__IMAGE_TAG__|' ${yamlPath}/single.yaml"
+                    sh "sed -i 's|image: matlord/rp_image_jenkin_kub:.*|image: matlord/rp_image_jenkin_kub:__IMAGE_TAG__|' ${yamlPath}/single.yaml"
 
                     // Verificar que los archivos contienen el placeholder correcto
                     sh "grep __IMAGE_TAG__ ${yamlPath}/*.yaml"
 
                     // Actualizar el placeholder en los archivos YAML
-                    sh "sed -i 's|__IMAGE_TAG__|${tag}|g' ${yamlPath}/w1-deployment.yaml"
-                    sh "sed -i 's|__IMAGE_TAG__|${tag}|g' ${yamlPath}/w2-deployment.yaml"
-                    sh "sed -i 's|__IMAGE_TAG__|${tag}|g' ${yamlPath}/rprr-deployment.yaml"
+                    sh "sed -i 's|__IMAGE_TAG__|${tag}|g' ${yamlPath}/single.yaml"
+                    //sh "sed -i 's|__IMAGE_TAG__|${tag}|g' ${yamlPath}/single.yaml"
+                    //sh "sed -i 's|__IMAGE_TAG__|${tag}|g' ${yamlPath}/single.yaml"
 
                     // Verificar que los placeholders fueron reemplazados correctamente
-                    sh "cat ${yamlPath}/w1-deployment.yaml"
-                    sh "cat ${yamlPath}/w2-deployment.yaml"
-                    sh "cat ${yamlPath}/rprr-deployment.yaml"
+                    sh "cat ${yamlPath}/single.yaml"
+                    //sh "cat ${yamlPath}/w2-deployment.yaml"
+                    //sh "cat ${yamlPath}/rprr-deployment.yaml"
 
                     // Aplicar los archivos YAML en el clúster de Kubernetes
-                    sh "kubectl apply -f ${yamlPath}/w1-deployment.yaml"
-                    sh "kubectl apply -f ${yamlPath}/w2-deployment.yaml"
-                    sh "kubectl apply -f ${yamlPath}/rprr-deployment.yaml"
+                    sh "kubectl apply -f ${yamlPath}/single.yaml"
+                    //sh "kubectl apply -f ${yamlPath}/w2-deployment.yaml"
+                    //sh "kubectl apply -f ${yamlPath}/rprr-deployment.yaml"
                 }
             }
         }
