@@ -71,13 +71,14 @@ pipeline {
                     def yamlPath = '/tmp/config-copy' // Ruta en la máquina del clúster donde están los archivos YAML
                     def tag = "stable-${env.BUILD_ID}" // Usar el mismo tag que se utilizó para empujar las imágenes
 
-                    // Verificar que los archivos existen
+                    // Verificar que los archivos existen y contienen el placeholder correcto
                     sh "ls -l ${yamlPath}"
+                    sh "grep __IMAGE_TAG__ ${yamlPath}/*.yaml"
 
                     // Actualizar el placeholder en los archivos YAML
-                    sh "sed -i 's|__IMAGE_TAG__|${tag}|' ${yamlPath}/w1-deployment.yaml"
-                    sh "sed -i 's|__IMAGE_TAG__|${tag}|' ${yamlPath}/w2-deployment.yaml"
-                    sh "sed -i 's|__IMAGE_TAG__|${tag}|' ${yamlPath}/rprr-deployment.yaml"
+                    sh "sed -i 's|__IMAGE_TAG__|${tag}|g' ${yamlPath}/w1-deployment.yaml"
+                    sh "sed -i 's|__IMAGE_TAG__|${tag}|g' ${yamlPath}/w2-deployment.yaml"
+                    sh "sed -i 's|__IMAGE_TAG__|${tag}|g' ${yamlPath}/rprr-deployment.yaml"
 
                     // Verificar que los placeholders fueron reemplazados correctamente
                     sh "cat ${yamlPath}/w1-deployment.yaml"
